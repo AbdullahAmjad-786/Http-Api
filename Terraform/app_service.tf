@@ -30,7 +30,7 @@ resource "azurerm_app_service" "app_service" {
 
   app_settings = {
     "PORT"         = "8080"
-    "DATABASE_URL" = azurerm_mysql_server.mysql_server.fqdn
+    "DATABASE_URL" = azurerm_key_vault_secret.database_url.value
     "DB_USER"      = azurerm_key_vault_secret.db_user.value
     "DB_PASSWORD"  = azurerm_key_vault_secret.db_password.value
   }
@@ -48,6 +48,14 @@ resource "azurerm_app_service" "app_service" {
         to_update       = true
       }
     ]
+  }
+  
+  # Associate with an NSG
+  network_profile {
+    name = "app-service-nsg"
+
+    # Replace this with the subnet ID that the App Service is deployed to
+    subnet_id = "/subscriptions/16919139-1b98-46d6-b9a1-66d6fae4a934/resourceGroups/${azurerm_resource_group.app_rg.name}/providers/Microsoft.Network/virtualNetworks/app-vnet/subnets/app-vnet-subnet"
   }
 }
 
