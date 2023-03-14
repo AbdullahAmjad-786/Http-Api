@@ -31,8 +31,23 @@ resource "azurerm_app_service" "app_service" {
   app_settings = {
     "PORT"         = "8080"
     "DATABASE_URL" = azurerm_mysql_server.mysql_server.fqdn
-    "DB_USER"      = var.db_username
-    "DB_PASSWORD"  = var.db_password
+    "DB_USER"      = azurerm_key_vault_secret.db_user.value
+    "DB_PASSWORD"  = azurerm_key_vault_secret.db_password.value
+  }
+  
+  # Configure HTTPS
+  site_config {
+    https_only = true
+
+    # Replace this with your custom domain and SSL certificate
+    host_name_ssl_states = [
+      {
+        name            = "test.api.com"
+        ssl_state       = "SniEnabled"
+        thumbprint      = "your-ssl-thumbprint"
+        to_update       = true
+      }
+    ]
   }
 }
 
