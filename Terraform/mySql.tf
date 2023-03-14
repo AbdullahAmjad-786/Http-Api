@@ -7,8 +7,8 @@ resource "azurerm_mysql_server" "mysql_server" {
   storage_mb          = 5120
   version             = "5.7"
 
-  administrator_login          = var.db_username
-  administrator_login_password = var.db_password
+  administrator_login          = azurerm_key_vault_secret.db_user.value
+  administrator_login_password = azurerm_key_vault_secret.db_password.value
 
   auto_grow_enabled = true
 
