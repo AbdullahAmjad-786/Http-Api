@@ -1,6 +1,6 @@
 # Create an App Service plan
 resource "azurerm_app_service_plan" "app_plan" {
-  name                = "app-plan"
+  name                = "test-app-plan"
   location            = azurerm_resource_group.app_rg.location
   resource_group_name = azurerm_resource_group.app_rg.name
 
@@ -18,14 +18,13 @@ resource "azurerm_app_service_plan" "app_plan" {
 
 # Create an Azure App Service
 resource "azurerm_app_service" "app_service" {
-  name                = "app-service"
+  name                = "test-app-service"
   location            = azurerm_resource_group.app_rg.location
   resource_group_name = azurerm_resource_group.app_rg.name
   app_service_plan_id  = azurerm_app_service_plan.app_plan.id
 
   site_config {
     always_on = true
-    linux_fx_version = "COMPOSE|${filebase64("docker-compose.yml")}"
   }
 
   app_settings = {
